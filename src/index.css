@@ -1,0 +1,30 @@
+html, body, #root {
+  height: 100%;
+}
+
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-body {
+  flex: 1;
+  display: flex;
+}
+
+header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #ddd;
+}
+
+.sidebar {
+  width: 260px;
+  padding: 20px;
+  border-right: 1px solid #ddd;
+}
+
+.chat {
+  flex: 1;
+  padding: 20px
+}
