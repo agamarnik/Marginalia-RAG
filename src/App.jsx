@@ -1,10 +1,13 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import ReactMarkdown from 'react-markdown'
 
 const API_KEY = import.meta.env.VITE_API_KEY
 
 function App() {
   const [question, setQuestion] = useState('')
-  const [answer, setAnswer] = useState('')
+  const [messages, setMessages] = useState([])
+  const messagesEndRef = useRef(null)
+  const [conversationId,setConversationId] = useState(null)
   const [file, setFile] = useState(null)
   const fileInputRef = useRef(null)
   const [isLoading, setIsLoading] = useState(false)
@@ -13,9 +16,15 @@ function App() {
   const [uploadError, setUploadError] = useState('')
   const [documents, setDocuments] = useState([])
 
+  useEffect(() => {   // autoscroll messages to bottom
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages]) // run every time messages array changes
+
   async function handleAsk() {
     setIsLoading(true)
-    setAskError('')
+    setAskError('') // clear error field
+    setMessages(prev => [...prev, { role: 'user', text: question }]) // prev user messages
+    setQuestion('') // clear input field
     try {
       const response = await fetch('http://127.0.0.1:8000/query', {
         method: 'POST',
@@ -23,11 +32,12 @@ function App() {
           'Content-Type': 'application/json',
           'X-API-Key': API_KEY,
         },
-        body: JSON.stringify({ question })
+        body: JSON.stringify({ question, conversation_id: conversationId })
       })
 
       const result = await response.json();
-      setAnswer(result.answer);
+      setMessages(prev => [...prev, { role: 'assistant', text: result.answer }]) // assistant response messages
+      setConversationId(result.conversation_id)
     } catch (err) {
       setAskError(err.message)
     } finally {
@@ -117,17 +127,26 @@ function App() {
             </ul>
           </aside>
           <main className="chat">
-            <input
-              type="text"
-              placeholder="Ask a question…"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-            />
-            <button onClick={handleAsk} disabled={isLoading}>
-              {isLoading ? 'Thinking…' : 'Ask'}
-            </button>
-            {askError && <p style={{ color: 'red' }}>{askError}</p>}
-            <p>{answer}</p>
+            <div className="chat-messages">
+            {messages.map((msg, index) => (
+              <div key={index} className={`message message-${msg.role}`}>
+                {msg.role === 'assistant' ? <ReactMarkdown>{msg.text}</ReactMarkdown> : msg.text}
+              </div>
+            ))}
+              <div ref={messagesEndRef} />
+            </div>
+            <div className="chat-composer">
+              <input
+                type="text"
+                placeholder="Ask a question…"
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+              />
+              <button onClick={handleAsk} disabled={isLoading}>
+                {isLoading ? 'Thinking…' : 'Ask'}
+              </button>
+              {askError && <p style={{ color: 'red' }}>{askError}</p>}
+            </div>
           </main>
         </div>
       </div>
