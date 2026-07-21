@@ -11,6 +11,7 @@ function App() {
   const [isUploading, setIsUploading] = useState(false)
   const [askError, setAskError] = useState('')
   const [uploadError, setUploadError] = useState('')
+  const [documents, setDocuments] = useState([])
 
   async function handleAsk() {
     setIsLoading(true)
@@ -58,6 +59,7 @@ function App() {
 
         const result = await response.json()
         console.log(result)
+        setDocuments(prevDocs => [...prevDocs, {name: file.name}]) // tracking uploaded docs
         setFile(null)
         fileInputRef.current.value = ''
       }
@@ -73,6 +75,7 @@ function App() {
           })
           const result = await response.json()
           console.log(result)
+          setDocuments(prevDocs => [...prevDocs, {name: file.name}])
           setFile(null)
           fileInputRef.current.value = ''
       }
@@ -101,6 +104,11 @@ function App() {
               {isUploading ? 'Uploading…' : 'Upload'}
             </button>
             {uploadError && <p style={{ color: 'red' }}>{uploadError}</p>}
+            <ul>
+              {documents.map((doc, index) => (
+                <li key={index}>{doc.name}</li>
+              ))}
+            </ul>
           </aside>
           <main className="chat">
             <input
