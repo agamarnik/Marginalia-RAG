@@ -36,7 +36,11 @@ function App() {
       })
 
       const result = await response.json();
-      setMessages(prev => [...prev, { role: 'assistant', text: result.answer }]) // assistant response messages
+      setMessages(prev => [...prev, {   // assistant response messages with optional file sources
+        role: 'assistant',
+        text: result.answer,
+        sources: result.sources.length > 0 ? result.sources : null
+      }])
       setConversationId(result.conversation_id)
     } catch (err) {
       setAskError(err.message)
@@ -128,11 +132,22 @@ function App() {
           </aside>
           <main className="chat">
             <div className="chat-messages">
-            {messages.map((msg, index) => (
-              <div key={index} className={`message message-${msg.role}`}>
-                {msg.role === 'assistant' ? <ReactMarkdown>{msg.text}</ReactMarkdown> : msg.text}
-              </div>
-            ))}
+              {messages.map((msg, index) => (
+                <div key={index} className={`message message-${msg.role}`}>
+                  {msg.role === 'assistant' ? (
+                    <>
+                    <ReactMarkdown>{msg.text}</ReactMarkdown>
+                    {msg.sources && (
+                      <p className="citations">
+                        Sources: {[...new Set(msg.sources)].join(', ')}
+                      </p>
+                    )}
+                    </>
+                  ) : (
+                    msg.text // user messages
+                  )}   
+                </div>
+              ))}
               <div ref={messagesEndRef} />
             </div>
             <div className="chat-composer">
