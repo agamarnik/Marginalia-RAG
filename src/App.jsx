@@ -42,6 +42,12 @@ function App() {
       return
     }
 
+    const alreadyExists = documents.some(doc => doc.name === file.name) // duplicate file upload check
+    if (alreadyExists) {
+      const confirmed = window.confirm(`"${file.name}" is already uploaded. Would you like to replace it?`)
+      if (!confirmed) return
+    }
+
     setIsUploading(true)
     setUploadError('')
     try {
@@ -59,7 +65,7 @@ function App() {
 
         const result = await response.json()
         console.log(result)
-        setDocuments(prevDocs => [...prevDocs, {name: file.name}]) // tracking uploaded docs
+        setDocuments(prevDocs => [...prevDocs.filter(doc => doc.name !== file.name), { name: file.name }]) // tracking new doc uploads, and moving duplicates to end
         setFile(null)
         fileInputRef.current.value = ''
       }
@@ -75,7 +81,7 @@ function App() {
           })
           const result = await response.json()
           console.log(result)
-          setDocuments(prevDocs => [...prevDocs, {name: file.name}])
+          setDocuments(prevDocs => [...prevDocs.filter(doc => doc.name !== file.name), { name: file.name }])
           setFile(null)
           fileInputRef.current.value = ''
       }
