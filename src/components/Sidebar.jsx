@@ -1,4 +1,4 @@
-export default function Sidebar ({ file, setFile, fileInputRef, isUploading, uploadError, documents, handleUpload }) {
+export default function Sidebar ({ file, setFile, fileInputRef, isUploading, uploadError, documents, handleUpload, handleDelete }) {
   return (
     <aside className="sidebar">
       <input
@@ -13,7 +13,10 @@ export default function Sidebar ({ file, setFile, fileInputRef, isUploading, upl
       {uploadError && <p style={{ color: 'red' }}>{uploadError}</p>}
       <ul>
         {documents.map((doc, index) => (
-          <li key={index}>{doc.name}</li>
+          <li key={index}>
+            {doc.name}
+            <button onClick={() => handleDelete(doc.name)}>Delete</button>
+          </li>
         ))}
       </ul>
     </aside>

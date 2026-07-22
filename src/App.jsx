@@ -19,9 +19,47 @@ function App() {
   const [uploadError, setUploadError] = useState('')
   const [documents, setDocuments] = useState([])
 
+  useEffect(() => {
+    fetchDocuments()
+  }, [])
+
   useEffect(() => {   // autoscroll messages to bottom
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages]) // run every time messages array changes
+
+  async function fetchDocuments() {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/documents', {
+        method: 'GET',
+        headers: {
+          'X-API-Key': API_KEY,
+        }
+      })
+      const result = await response.json();
+      const docs = result.documents.map(doc => ({ name: doc }))
+      setDocuments(docs)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  async function handleDelete(docName) {
+    const confirmed = window.confirm(`Delete: "${docName}"? This action is permanent.`)
+    if (!confirmed) return
+
+    try {
+      const response = await fetch(`http://127.0.0.1:8000/documents/${docName}`, {
+        method: 'DELETE',
+        headers: {
+          'X-API-Key': API_KEY,
+        },
+      })
+      const result = await response.json();
+      await fetchDocuments()
+    } catch (err) {
+      console.error(err)
+    }
+  }
 
   async function handleAsk() {
     setIsLoading(true)
@@ -122,6 +160,7 @@ function App() {
             uploadError={uploadError}
             documents={documents}
             handleUpload={handleUpload}
+            handleDelete={handleDelete}
           />
           <main className="chat">
             <MessageList
