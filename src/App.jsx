@@ -1,5 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
-import ReactMarkdown from 'react-markdown'
+import Header from './components/Header.jsx'
+import Sidebar from './components/Sidebar.jsx'
+import MessageList from './components/MessageList.jsx'
+import ChatComposer from './components/ChatComposer.jsx'
 
 const API_KEY = import.meta.env.VITE_API_KEY
 
@@ -109,59 +112,29 @@ function App() {
   return (
     <>
       <div className="app">
-        <header>
-          <h1>Marginalia</h1>
-        </header>
+        <Header />
         <div className="app-body">
-          <aside className="sidebar">
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-            {file && <p>Selected: {file.name}</p>}
-            <button onClick={handleUpload} disabled={isUploading}>
-              {isUploading ? 'Uploading…' : 'Upload'}
-            </button>
-            {uploadError && <p style={{ color: 'red' }}>{uploadError}</p>}
-            <ul>
-              {documents.map((doc, index) => (
-                <li key={index}>{doc.name}</li>
-              ))}
-            </ul>
-          </aside>
+          <Sidebar
+            file={file}
+            setFile={setFile}
+            fileInputRef={fileInputRef}
+            isUploading={isUploading}
+            uploadError={uploadError}
+            documents={documents}
+            handleUpload={handleUpload}
+          />
           <main className="chat">
-            <div className="chat-messages">
-              {messages.map((msg, index) => (
-                <div key={index} className={`message message-${msg.role}`}>
-                  {msg.role === 'assistant' ? (
-                    <>
-                    <ReactMarkdown>{msg.text}</ReactMarkdown>
-                    {msg.sources && (
-                      <p className="citations">
-                        Sources: {[...new Set(msg.sources)].join(', ')}
-                      </p>
-                    )}
-                    </>
-                  ) : (
-                    msg.text // user messages
-                  )}   
-                </div>
-              ))}
-              <div ref={messagesEndRef} />
-            </div>
-            <div className="chat-composer">
-              <input
-                type="text"
-                placeholder="Ask a question…"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-              />
-              <button onClick={handleAsk} disabled={isLoading}>
-                {isLoading ? 'Thinking…' : 'Ask'}
-              </button>
-              {askError && <p style={{ color: 'red' }}>{askError}</p>}
-            </div>
+            <MessageList
+              messages={messages}
+              messagesEndRef={messagesEndRef}
+            />
+            <ChatComposer
+              question={question}
+              setQuestion={setQuestion}
+              handleAsk={handleAsk}
+              isLoading={isLoading}
+              askError={askError}
+            />
           </main>
         </div>
       </div>
