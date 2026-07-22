@@ -53,17 +53,48 @@ header {
 
 .message {
   max-width: 60%;
-  padding: 10px 14px;
-  border-radius: 8px;
   margin-bottom: 10px;
 }
 
 .message-user {
   margin-left: auto;
+  padding: 10px 14px;
+  border-radius: 8px;
   background: #d1e7ff;
 }
 
 .message-assistant {
+  display: flex;
+  gap: 10px;
   margin-right: auto;
+}
+
+.message-content {
+  padding: 10px 14px;
+  border-radius: 8px;
   background: #f0f0f0;
+}
+
+.avatar {
+  width: 30px;
+  height: 30px;
+
+  /* Turn the square into a circle */
+  border-radius: 50%;
+
+  /* Background and border styling */
+  background-color: #f0f0f0;
+  border: 1px solid #d1e7ff;
+
+  /* Center the emoji perfectly inside */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+
+  /* Size the emoji relative to the circle */
+  font-size: 20px;
+
+  /* Prevent any browser scaling issues */
+  line-height: 1;
 }

@@ -166,6 +166,7 @@ function App() {
             <MessageList
               messages={messages}
               messagesEndRef={messagesEndRef}
+              isLoading={isLoading}
             />
             <ChatComposer
               question={question}
