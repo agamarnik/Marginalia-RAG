@@ -57,6 +57,8 @@ expected running locally at `http://127.0.0.1:8000` by default (see
 - `POST /query` — `{ question, conversation_id }` → `{ answer, sources, conversation_id }`
 - `POST /upload` — `{ source, content }` for text/markdown files
 - `POST /upload-pdf` — multipart file upload for PDFs
+- `GET /documents` - fetch all uploaded documents
+- `DELETE /documents/source` - delete a document
 
 Make sure the backend is running and has CORS configured to allow requests
 from `http://localhost:5173` before testing locally.
@@ -66,7 +68,7 @@ from `http://localhost:5173` before testing locally.
 src/
 ├── App.jsx                    Top-level state and handler functions
 components/
-├── Header.jsx                Static app header
+├── Header.jsx                 Static app header
 ├── Sidebar.jsx                Document upload + list
 ├── MessageList.jsx            Scrolling chat history, markdown + citations
 ├── ChatComposer.jsx           Question input + submit button
