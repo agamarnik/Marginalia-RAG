@@ -1,16 +1,84 @@
-# React + Vite
+# Marginalia
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+*Marginalia: notes written in the margins of a book.* A React frontend for a
+Retrieval-Augmented Generation (RAG) API — upload documents, then ask
+questions and get answers grounded in their content, with clickable source
+citations back to the text and multi-turn conversation context.
 
-Currently, two official plugins are available:
+Backend: [simple-rag-backend](https://github.com/agamarnik/simple-rag-backend)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- **Document upload** — PDF, TXT, and MD files, routed to the right backend
+  endpoint automatically based on file type
+- **Chat with citations** — every assistant answer lists which documents it
+  was sourced from
+- **Multi-turn conversations** — follow-up questions resolve context (e.g.
+  "why did it end?" correctly resolves against a prior question) via the
+  backend's query-rewriting
+- **Markdown-rendered responses** — lists, bold text, and other formatting in
+  answers render properly rather than showing raw syntax
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech stack
 
-## Expanding the Oxlint configuration
+- React + Vite
+- [react-markdown](https://github.com/remarkjs/react-markdown) for rendering
+  assistant responses
+- Plain CSS (no framework)
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Setup
+
+Requires Node 18+.
+
+```
+bash
+npm install
+npm run dev
+```
+
+Opens at `http://localhost:5173`.
+
+### Environment variables
+
+Create a `.env` file in the project root:
+
+`VITE_API_KEY=your-api-key-here`
+
+This is required — the app sends it as an `X-API-Key` header on every
+request to the backend. `.env` is already gitignored.
+
+### Connecting to the backend
+
+This app is built against
+[simple-rag-backend](https://github.com/agamarnik/simple-rag-backend),
+expected running locally at `http://127.0.0.1:8000` by default (see
+`App.jsx` for the base URL). It calls:
+
+- `POST /query` — `{ question, conversation_id }` → `{ answer, sources, conversation_id }`
+- `POST /upload` — `{ source, content }` for text/markdown files
+- `POST /upload-pdf` — multipart file upload for PDFs
+
+Make sure the backend is running and has CORS configured to allow requests
+from `http://localhost:5173` before testing locally.
+
+## Project structure
+```
+src/
+├── App.jsx                    Top-level state and handler functions
+components/
+├── Header.jsx                Static app header
+├── Sidebar.jsx                Document upload + list
+├── MessageList.jsx            Scrolling chat history, markdown + citations
+├── ChatComposer.jsx           Question input + submit button
+```
+
+## Building for deployment
+
+```
+bash
+npm run build
+```
+
+Outputs a static site to `dist/`, deployable to any static host (Netlify,
+Vercel, GitHub Pages). Note the backend also needs to be reachable from
+wherever this is hosted, with CORS updated accordingly.
