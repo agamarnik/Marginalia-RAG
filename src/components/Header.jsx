@@ -1,7 +1,9 @@
+import logo from '../assets/MarginaliaLogo4.png';
+
 export default function Header () {
   return (
     <header>
-      <h1>Marginalia</h1>
+      <img src={logo} alt="Marginalia" className="header-image" />
     </header>
   )
 }

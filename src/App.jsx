@@ -120,7 +120,7 @@ function App() {
 
         const result = await response.json()
         console.log(result)
-        setDocuments(prevDocs => [...prevDocs.filter(doc => doc.name !== file.name), { name: file.name }]) // tracking new doc uploads, and moving duplicates to end
+        await fetchDocuments()
         setFile(null)
         fileInputRef.current.value = ''
       }
@@ -136,7 +136,7 @@ function App() {
           })
           const result = await response.json()
           console.log(result)
-          setDocuments(prevDocs => [...prevDocs.filter(doc => doc.name !== file.name), { name: file.name }])
+          await fetchDocuments()
           setFile(null)
           fileInputRef.current.value = ''
       }

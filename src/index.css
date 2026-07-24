@@ -15,14 +15,92 @@ html, body, #root {
 }
 
 header {
-  padding: 16px 20px;
+  padding: 10px;
   border-bottom: 1px solid #ddd;
+}
+
+.header-image {
+  width: auto;
+  height: 60px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .sidebar {
   width: 260px;
   padding: 20px;
   border-right: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  margin: 0 0 16px;
+  font-size: 16px;
+}
+
+.sidebar > button {
+  align-self: flex-start;
+}
+
+.dropzone {
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.dropzone-active {
+  border-color: #4a90d9;
+  background: #f0f7ff;
+}
+
+.dropzone p,
+.doc-list li span {
+  overflow-wrap: break-word;
+}
+
+.remove-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  margin-left: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.remove-btn:hover {
+  color: #d33;
+  background: #f5f5f5;
+}
+
+.doc-list {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.doc-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 0;
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999;
+  display: flex;
+  align-items: center;
+}
+
+.delete-btn:hover {
+  color: #d33;
 }
 
 .chat {
