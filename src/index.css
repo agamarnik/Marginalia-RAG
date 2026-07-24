@@ -57,6 +57,13 @@ header {
   background: #f0f7ff;
 }
 
+.dropzone-uploading {
+  border-color: #ccc;
+  background: #f5f5f5;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .dropzone p,
 .doc-list li span {
   overflow-wrap: break-word;

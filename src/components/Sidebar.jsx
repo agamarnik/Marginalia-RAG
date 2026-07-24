@@ -7,8 +7,7 @@ export default function Sidebar ({ file, setFile, fileInputRef, isUploading, upl
   return (
     <aside className="sidebar">
       <h2>Documents</h2>
-      <div
-        className={`dropzone ${isDragging ? 'dropzone-active' : ''}`}
+      <div className={`dropzone ${isDragging ? 'dropzone-active' : ''} ${isUploading ? 'dropzone-uploading' : ''}`}
         onDragOver={(e) => {
           e.preventDefault()
           setIsDragging(true)
